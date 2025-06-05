@@ -1,9 +1,11 @@
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { TopBar } from "@/components/TopBar";
 import { Plus, Edit, Trash2, Search, Upload, FileUp } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -11,13 +13,41 @@ const Products = () => {
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { t } = useLanguage();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  const loadProducts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setProducts(data || []);
+    } catch (error: any) {
+      console.error('Ошибка загрузки товаров:', error);
+      toast({
+        title: "Ошибка",
+        description: "Не удалось загрузить товары",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     if (!file.name.toLowerCase().endsWith('.xml')) {
-      alert('Пожалуйста, выберите XML файл');
+      toast({
+        title: "Ошибка",
+        description: "Пожалуйста, выберите XML файл",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -27,31 +57,74 @@ const Products = () => {
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(text, "text/xml");
       
-      // Парсим XML файл с товарами
       const items = xmlDoc.getElementsByTagName('item') || xmlDoc.getElementsByTagName('product');
       const newProducts = [];
       
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
-        const product = {
-          id: item.getAttribute('id') || `PROD-${Date.now()}-${i}`,
+        const productData = {
           name: item.getElementsByTagName('name')[0]?.textContent || 'Неизвестный товар',
           category: item.getElementsByTagName('category')[0]?.textContent || 'Без категории',
-          price: item.getElementsByTagName('price')[0]?.textContent || '0',
-          stock: parseInt(item.getElementsByTagName('stock')[0]?.textContent || '0'),
-          description: item.getElementsByTagName('description')[0]?.textContent || 'Описание отсутствует'
+          price: parseFloat(item.getElementsByTagName('price')[0]?.textContent || '0'),
+          stock_quantity: parseInt(item.getElementsByTagName('stock')[0]?.textContent || '0'),
+          description: item.getElementsByTagName('description')[0]?.textContent || 'Описание отсутствует',
+          xml_data: {
+            original_id: item.getAttribute('id'),
+            raw_data: item.outerHTML
+          }
         };
-        newProducts.push(product);
+        
+        // Сохраняем товар в базу данных
+        const { data, error } = await supabase
+          .from('products')
+          .insert([productData])
+          .select()
+          .single();
+
+        if (!error && data) {
+          newProducts.push(data);
+        }
       }
       
-      setProducts(newProducts);
-      console.log(`Загружено ${newProducts.length} товаров из XML файла`);
+      await loadProducts(); // Перезагружаем все товары
       
-    } catch (error) {
+      toast({
+        title: "Успешно!",
+        description: `Загружено ${newProducts.length} товаров из XML файла`,
+      });
+      
+    } catch (error: any) {
       console.error('Ошибка при загрузке XML файла:', error);
-      alert('Ошибка при загрузке файла. Проверьте формат XML.');
+      toast({
+        title: "Ошибка",
+        description: "Ошибка при загрузке файла. Проверьте формат XML.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const deleteProduct = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      await loadProducts();
+      toast({
+        title: "Успешно!",
+        description: "Товар удален",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось удалить товар",
+        variant: "destructive",
+      });
     }
   };
 
@@ -75,7 +148,7 @@ const Products = () => {
         
         <main className="flex-1 p-6">
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-4xl font-bold text-white bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent text-glow-orange">
+            <h1 className="text-4xl font-bold text-white bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent text-glow-orange-intense">
               {t('products.title')}
             </h1>
             
@@ -142,20 +215,23 @@ const Products = () => {
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {filteredProducts.map((product: any) => {
-                const stockStatus = getStockStatus(product.stock);
+                const stockStatus = getStockStatus(product.stock_quantity || 0);
                 
                 return (
                   <div key={product.id} className="bg-gray-800/60 backdrop-blur rounded-xl p-6 border border-orange-500/20 hover:border-orange-500/50 transition-all duration-300 hover-glow-orange neon-border-orange">
                     <div className="flex items-start justify-between mb-4">
                       <div>
-                        <h3 className="text-lg font-semibold text-white mb-1 text-glow-orange">{product.name}</h3>
+                        <h3 className="text-lg font-semibold text-white mb-1 text-glow-orange-intense">{product.name}</h3>
                         <span className="text-sm text-gray-400">{product.category}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <button className="p-2 text-gray-400 hover:text-orange-400 hover:bg-gray-700/50 rounded transition-all duration-200">
                           <Edit size={16} />
                         </button>
-                        <button className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700/50 rounded transition-all duration-200">
+                        <button 
+                          onClick={() => deleteProduct(product.id)}
+                          className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700/50 rounded transition-all duration-200"
+                        >
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -164,10 +240,12 @@ const Products = () => {
                     <p className="text-gray-300 text-sm mb-4 line-clamp-2">{product.description}</p>
                     
                     <div className="flex items-center justify-between mb-4">
-                      <div className="text-2xl font-bold text-orange-400 text-glow-orange">{product.price}</div>
+                      <div className="text-2xl font-bold text-orange-400 text-glow-orange-intense">
+                        ₽{product.price?.toLocaleString()}
+                      </div>
                       <div className={`px-3 py-1 rounded-full ${stockStatus.bg} border border-orange-500/20`}>
                         <span className={`text-sm font-medium ${stockStatus.color}`}>
-                          {product.stock} шт.
+                          {product.stock_quantity || 0} шт.
                         </span>
                       </div>
                     </div>
