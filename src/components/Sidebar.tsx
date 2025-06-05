@@ -17,20 +17,20 @@ export const Sidebar = () => {
   ];
 
   return (
-    <div className={`bg-gray-950 border-r border-gray-800 transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} shadow-2xl`}>
-      <div className="p-4 border-b border-gray-800">
+    <div className={`bg-gray-900 border-r border-orange-500/20 transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} shadow-2xl shadow-orange-500/10`}>
+      <div className="p-4 border-b border-orange-500/30">
         <div className="flex items-center justify-between">
           {!collapsed && (
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-sm">DS</span>
+              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-lg shadow-orange-500/30">
+                <span className="text-white font-bold text-sm">А</span>
               </div>
-              <span className="text-white font-semibold">DeliverySanta</span>
+              <span className="text-white font-semibold text-xl">Апельсин</span>
             </div>
           )}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="p-1 text-gray-400 hover:text-white transition-colors"
+            className="p-1 text-gray-400 hover:text-orange-400 transition-colors"
           >
             {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
           </button>
@@ -49,8 +49,8 @@ export const Sidebar = () => {
                   to={item.path}
                   className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 ${
                     isActive 
-                      ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg shadow-red-500/25' 
-                      : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
+                      ? 'bg-gradient-to-r from-orange-600 to-orange-500 text-white shadow-lg shadow-orange-500/30 glow-orange' 
+                      : 'text-gray-400 hover:text-white hover:bg-gray-800/50 hover:shadow-orange-500/10'
                   }`}
                 >
                   <Icon size={20} />
