@@ -3,9 +3,11 @@ import { useState } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { TopBar } from "@/components/TopBar";
 import { Plus, Edit, Trash2, Search } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { t } = useLanguage();
 
   const products = [
     {
@@ -56,13 +58,13 @@ const Products = () => {
   );
 
   const getStockStatus = (stock: number) => {
-    if (stock <= 5) return { color: 'text-red-400', bg: 'bg-red-900/20', text: 'Низкий остаток' };
-    if (stock <= 15) return { color: 'text-yellow-400', bg: 'bg-yellow-900/20', text: 'Средний остаток' };
-    return { color: 'text-green-400', bg: 'bg-green-900/20', text: 'В наличии' };
+    if (stock <= 5) return { color: 'text-red-400', bg: 'bg-red-900/20', text: t('products.lowStock') };
+    if (stock <= 15) return { color: 'text-yellow-400', bg: 'bg-yellow-900/20', text: t('products.mediumStock') };
+    return { color: 'text-green-400', bg: 'bg-green-900/20', text: t('products.inStock') };
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 text-white flex">
       <Sidebar />
       
       <div className="flex-1 flex flex-col">
@@ -70,11 +72,13 @@ const Products = () => {
         
         <main className="flex-1 p-6">
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-bold text-white">Управление товарами</h1>
+            <h1 className="text-4xl font-bold text-white bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+              {t('products.title')}
+            </h1>
             
-            <button className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors">
+            <button className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white px-6 py-3 rounded-lg transition-all duration-200 shadow-lg shadow-red-500/25 hover:shadow-red-500/40">
               <Plus size={20} />
-              Добавить товар
+              {t('products.addProduct')}
             </button>
           </div>
 
@@ -83,10 +87,10 @@ const Products = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
                 type="text"
-                placeholder="Поиск товаров..."
+                placeholder={t('products.search')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="bg-gray-800 text-white pl-10 pr-4 py-3 rounded-lg border border-gray-700 focus:border-red-500 focus:outline-none w-full"
+                className="bg-gray-800/50 backdrop-blur text-white pl-10 pr-4 py-3 rounded-lg border border-gray-700 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 w-full transition-all duration-200"
               />
             </div>
           </div>
@@ -96,17 +100,17 @@ const Products = () => {
               const stockStatus = getStockStatus(product.stock);
               
               return (
-                <div key={product.id} className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-red-500 transition-colors">
+                <div key={product.id} className="bg-gray-800/50 backdrop-blur rounded-xl p-6 border border-gray-700 hover:border-red-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-red-500/10">
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <h3 className="text-lg font-semibold text-white mb-1">{product.name}</h3>
                       <span className="text-sm text-gray-400">{product.category}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded transition-colors">
+                      <button className="p-2 text-gray-400 hover:text-white hover:bg-gray-700/50 rounded transition-all duration-200">
                         <Edit size={16} />
                       </button>
-                      <button className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded transition-colors">
+                      <button className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700/50 rounded transition-all duration-200">
                         <Trash2 size={16} />
                       </button>
                     </div>
