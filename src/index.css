@@ -14,260 +14,114 @@
   }
 }
 
-/* КРУТЫЕ НЕОНОВЫЕ ЭФФЕКТЫ СВЕЧЕНИЯ ДЛЯ ТЕКСТА */
+/* Современное свечение для текста */
 .text-glow-orange {
-  background: linear-gradient(45deg, #ff6b35, #f7931e, #ff9500, #ff6b35);
-  background-size: 400% 400%;
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradientShift 3s ease-in-out infinite;
-  filter: drop-shadow(0 0 8px rgba(255, 107, 53, 0.8)) 
-          drop-shadow(0 0 16px rgba(247, 147, 30, 0.6)) 
-          drop-shadow(0 0 24px rgba(255, 149, 0, 0.4));
+  filter: drop-shadow(0 2px 4px rgba(255, 107, 53, 0.3));
 }
 
 .text-glow-orange-intense {
-  background: linear-gradient(135deg, #ff3d00, #ff6b35, #ff9500, #ffc107, #ff3d00);
-  background-size: 300% 300%;
+  background: linear-gradient(135deg, #ff3d00, #ff6b35);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: neonPulse 2s ease-in-out infinite, gradientShift 4s linear infinite;
-  filter: drop-shadow(0 0 4px rgba(255, 61, 0, 1)) 
-          drop-shadow(0 0 8px rgba(255, 107, 53, 0.9)) 
-          drop-shadow(0 0 16px rgba(255, 149, 0, 0.7))
-          drop-shadow(0 0 32px rgba(255, 193, 7, 0.5));
-  text-shadow: 0 0 10px rgba(255, 61, 0, 0.8),
-               0 0 20px rgba(255, 107, 53, 0.6),
-               0 0 30px rgba(255, 149, 0, 0.4),
-               0 0 40px rgba(255, 193, 7, 0.2);
+  filter: drop-shadow(0 2px 6px rgba(255, 61, 0, 0.4));
 }
 
-/* СОВРЕМЕННЫЕ НЕОНОВЫЕ ГРАНИЦЫ И СВЕЧЕНИЯ */
+/* Чистые современные границы */
 .glow-orange {
-  box-shadow: 
-    0 0 10px rgba(255, 107, 53, 0.6),
-    0 0 20px rgba(255, 107, 53, 0.4),
-    0 0 30px rgba(255, 107, 53, 0.3),
-    inset 0 0 10px rgba(255, 107, 53, 0.1);
-  border: 1px solid rgba(255, 107, 53, 0.5);
+  box-shadow: 0 4px 6px -1px rgba(255, 107, 53, 0.1), 0 2px 4px -1px rgba(255, 107, 53, 0.06);
+  border: 1px solid rgba(255, 107, 53, 0.2);
 }
 
 .hover-glow-orange:hover {
-  box-shadow: 
-    0 0 15px rgba(255, 61, 0, 0.8),
-    0 0 30px rgba(255, 107, 53, 0.6),
-    0 0 45px rgba(255, 149, 0, 0.4),
-    0 0 60px rgba(255, 193, 7, 0.2),
-    inset 0 0 15px rgba(255, 107, 53, 0.2);
-  border: 1px solid rgba(255, 61, 0, 0.8);
-  transform: translateY(-2px) scale(1.02);
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 10px 15px -3px rgba(255, 107, 53, 0.1), 0 4px 6px -2px rgba(255, 107, 53, 0.05);
+  border: 1px solid rgba(255, 107, 53, 0.3);
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
 }
 
 .neon-border-orange {
-  background: linear-gradient(135deg, 
-    rgba(255, 61, 0, 0.15), 
-    rgba(255, 107, 53, 0.1), 
-    rgba(255, 149, 0, 0.05));
-  border: 2px solid transparent;
-  background-clip: padding-box;
-  position: relative;
-}
-
-.neon-border-orange::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 2px;
-  background: linear-gradient(45deg, #ff3d00, #ff6b35, #ff9500, #ffc107);
-  border-radius: inherit;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  animation: borderGlow 3s linear infinite;
+  background: rgba(255, 61, 0, 0.05);
+  border: 1px solid rgba(255, 107, 53, 0.2);
+  backdrop-filter: blur(10px);
 }
 
 .focus\:glow-orange:focus {
-  box-shadow: 
-    0 0 0 3px rgba(255, 61, 0, 0.5),
-    0 0 10px rgba(255, 107, 53, 0.8),
-    0 0 20px rgba(255, 149, 0, 0.6),
-    0 0 30px rgba(255, 193, 7, 0.4);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
   outline: none;
-  border: 2px solid rgba(255, 61, 0, 0.8);
+  border: 1px solid rgba(255, 107, 53, 0.4);
 }
 
-/* КРУТЫЕ СОВРЕМЕННЫЕ АНИМАЦИИ */
+/* Современная анимация пульса */
 .animate-pulse-orange {
-  animation: modernPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: subtlePulse 2s ease-in-out infinite;
 }
 
-@keyframes modernPulse {
-  0%, 100% {
-    background: linear-gradient(135deg, rgba(255, 61, 0, 0.9), rgba(255, 107, 53, 0.7));
-    box-shadow: 0 0 20px rgba(255, 61, 0, 0.6);
-    transform: scale(1);
-  }
-  50% {
-    background: linear-gradient(135deg, rgba(255, 107, 53, 1), rgba(255, 149, 0, 0.8));
-    box-shadow: 0 0 30px rgba(255, 107, 53, 0.8);
-    transform: scale(1.05);
-  }
-}
-
-@keyframes neonPulse {
-  0%, 100% {
-    filter: drop-shadow(0 0 4px rgba(255, 61, 0, 1)) 
-            drop-shadow(0 0 8px rgba(255, 107, 53, 0.9)) 
-            drop-shadow(0 0 16px rgba(255, 149, 0, 0.7));
-  }
-  50% {
-    filter: drop-shadow(0 0 8px rgba(255, 61, 0, 1)) 
-            drop-shadow(0 0 16px rgba(255, 107, 53, 1)) 
-            drop-shadow(0 0 32px rgba(255, 149, 0, 0.9))
-            drop-shadow(0 0 48px rgba(255, 193, 7, 0.7));
-  }
-}
-
-@keyframes gradientShift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes borderGlow {
+@keyframes subtlePulse {
   0%, 100% {
     opacity: 1;
   }
   50% {
-    opacity: 0.7;
+    opacity: 0.8;
   }
 }
 
-/* СТИЛИ ДЛЯ ЛОГОТИПА С КРУТЫМИ ЭФФЕКТАМИ */
+/* Стили для логотипа */
 .logo-glow {
-  filter: drop-shadow(0 0 8px rgba(255, 61, 0, 0.9)) 
-          drop-shadow(0 0 16px rgba(255, 107, 53, 0.7))
-          drop-shadow(0 0 24px rgba(255, 149, 0, 0.5));
-  animation: logoFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 2px 4px rgba(255, 61, 0, 0.2));
 }
 
 .logo-container {
   position: relative;
-  overflow: hidden;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(255, 61, 0, 0.2), rgba(255, 107, 53, 0.1));
+  background: rgba(255, 61, 0, 0.1);
+  border-radius: 8px;
 }
 
-.logo-container::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  right: -50%;
-  bottom: -50%;
-  background: conic-gradient(from 0deg, transparent, rgba(255, 61, 0, 0.3), rgba(255, 107, 53, 0.2), rgba(255, 149, 0, 0.1), transparent);
-  animation: logoRotate 4s linear infinite;
-  z-index: 0;
-}
-
-@keyframes logoFloat {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-3px) rotate(1deg);
-  }
-  66% {
-    transform: translateY(2px) rotate(-1deg);
-  }
-}
-
-@keyframes logoRotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* УЛЬТРА СОВРЕМЕННЫЕ ГРАДИЕНТЫ */
+/* Современные градиенты */
 .bg-gradient-orange {
-  background: linear-gradient(135deg, #ff3d00, #ff6b35, #ff9500, #ffc107);
-  background-size: 400% 400%;
-  animation: gradientShift 6s ease infinite;
+  background: linear-gradient(135deg, #ff3d00, #ff6b35);
 }
 
 .bg-gradient-orange-dark {
-  background: linear-gradient(135deg, #d84315, #e65100, #f57c00, #ff8f00);
-  background-size: 400% 400%;
-  animation: gradientShift 8s ease infinite;
+  background: linear-gradient(135deg, #d84315, #e65100);
 }
 
-/* СТИЛИ ДЛЯ МОДАЛЬНЫХ ОКОН С НЕОНОВЫМИ ЭФФЕКТАМИ */
+/* Стили для модальных окон */
 .modal-overlay {
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(15px) saturate(1.5);
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
 }
 
 .modal-content {
-  background: linear-gradient(135deg, 
-    rgba(17, 24, 39, 0.98), 
-    rgba(31, 41, 55, 0.95),
-    rgba(55, 65, 81, 0.9));
-  border: 2px solid transparent;
-  background-clip: padding-box;
-  box-shadow: 
-    0 0 30px rgba(255, 61, 0, 0.4),
-    0 0 60px rgba(255, 107, 53, 0.2),
-    0 0 90px rgba(255, 149, 0, 0.1),
-    inset 0 0 30px rgba(255, 61, 0, 0.05);
-  position: relative;
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.95), rgba(31, 41, 55, 0.9));
+  border: 1px solid rgba(255, 107, 53, 0.2);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
-.modal-content::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 2px;
-  background: linear-gradient(45deg, #ff3d00, #ff6b35, #ff9500, #ffc107, #ff3d00);
-  border-radius: inherit;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  animation: borderGlow 4s linear infinite;
-}
-
-/* КАСТОМНАЯ ПОЛОСА ПРОКРУТКИ В НЕОНОВОМ СТИЛЕ */
+/* Кастомная полоса прокрутки */
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: linear-gradient(180deg, rgba(31, 41, 55, 0.5), rgba(17, 24, 39, 0.8));
-  border-radius: 6px;
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #ff3d00, #ff6b35, #ff9500);
-  border-radius: 6px;
-  box-shadow: 
-    0 0 10px rgba(255, 61, 0, 0.6),
-    inset 0 0 5px rgba(255, 255, 255, 0.2);
+  background: linear-gradient(180deg, #ff3d00, #ff6b35);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #ff6b35, #ff9500, #ffc107);
-  box-shadow: 
-    0 0 15px rgba(255, 107, 53, 0.8),
-    inset 0 0 5px rgba(255, 255, 255, 0.3);
+  background: linear-gradient(180deg, #ff6b35, #ff9500);
 }
 
-/* ДОПОЛНИТЕЛЬНЫЕ КРУТЫЕ ЭФФЕКТЫ */
+/* Современные эффекты */
 .cyber-glow {
   position: relative;
   overflow: hidden;
@@ -280,11 +134,11 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  animation: scan 2s linear infinite;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: subtleScan 3s linear infinite;
 }
 
-@keyframes scan {
+@keyframes subtleScan {
   0% {
     left: -100%;
   }
@@ -294,26 +148,5 @@
 }
 
 .glow-text-shadow {
-  text-shadow: 
-    0 0 5px currentColor,
-    0 0 10px currentColor,
-    0 0 15px currentColor,
-    0 0 20px rgba(255, 61, 0, 0.8),
-    0 0 35px rgba(255, 107, 53, 0.6),
-    0 0 40px rgba(255, 149, 0, 0.4);
-}
-
-.hologram-effect {
-  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
-  background-size: 200% 200%;
-  animation: hologram 3s linear infinite;
-}
-
-@keyframes hologram {
-  0% {
-    background-position: -200% -200%;
-  }
-  100% {
-    background-position: 200% 200%;
-  }
+  text-shadow: 0 2px 4px rgba(255, 61, 0, 0.3);
 }
