@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -14,57 +14,153 @@
   }
 }
 
-/* Улучшенные эффекты свечения для текста */
+/* КРУТЫЕ НЕОНОВЫЕ ЭФФЕКТЫ СВЕЧЕНИЯ ДЛЯ ТЕКСТА */
 .text-glow-orange {
-  text-shadow: 0 0 10px rgba(251, 146, 60, 0.8), 0 0 20px rgba(251, 146, 60, 0.6), 0 0 30px rgba(251, 146, 60, 0.4);
+  background: linear-gradient(45deg, #ff6b35, #f7931e, #ff9500, #ff6b35);
+  background-size: 400% 400%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(255, 107, 53, 0.8)) 
+          drop-shadow(0 0 16px rgba(247, 147, 30, 0.6)) 
+          drop-shadow(0 0 24px rgba(255, 149, 0, 0.4));
 }
 
 .text-glow-orange-intense {
-  text-shadow: 0 0 5px rgba(251, 146, 60, 1), 0 0 10px rgba(251, 146, 60, 0.8), 0 0 15px rgba(251, 146, 60, 0.6), 0 0 20px rgba(251, 146, 60, 0.4);
-  color: #fb923c;
+  background: linear-gradient(135deg, #ff3d00, #ff6b35, #ff9500, #ffc107, #ff3d00);
+  background-size: 300% 300%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: neonPulse 2s ease-in-out infinite, gradientShift 4s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(255, 61, 0, 1)) 
+          drop-shadow(0 0 8px rgba(255, 107, 53, 0.9)) 
+          drop-shadow(0 0 16px rgba(255, 149, 0, 0.7))
+          drop-shadow(0 0 32px rgba(255, 193, 7, 0.5));
+  text-shadow: 0 0 10px rgba(255, 61, 0, 0.8),
+               0 0 20px rgba(255, 107, 53, 0.6),
+               0 0 30px rgba(255, 149, 0, 0.4),
+               0 0 40px rgba(255, 193, 7, 0.2);
 }
 
-/* Эффекты свечения для элементов */
+/* СОВРЕМЕННЫЕ НЕОНОВЫЕ ГРАНИЦЫ И СВЕЧЕНИЯ */
 .glow-orange {
-  box-shadow: 0 0 10px rgba(251, 146, 60, 0.5), 0 0 20px rgba(251, 146, 60, 0.3), 0 0 30px rgba(251, 146, 60, 0.2);
+  box-shadow: 
+    0 0 10px rgba(255, 107, 53, 0.6),
+    0 0 20px rgba(255, 107, 53, 0.4),
+    0 0 30px rgba(255, 107, 53, 0.3),
+    inset 0 0 10px rgba(255, 107, 53, 0.1);
+  border: 1px solid rgba(255, 107, 53, 0.5);
 }
 
 .hover-glow-orange:hover {
-  box-shadow: 0 0 15px rgba(251, 146, 60, 0.7), 0 0 30px rgba(251, 146, 60, 0.5), 0 0 45px rgba(251, 146, 60, 0.3);
-  transition: box-shadow 0.3s ease;
+  box-shadow: 
+    0 0 15px rgba(255, 61, 0, 0.8),
+    0 0 30px rgba(255, 107, 53, 0.6),
+    0 0 45px rgba(255, 149, 0, 0.4),
+    0 0 60px rgba(255, 193, 7, 0.2),
+    inset 0 0 15px rgba(255, 107, 53, 0.2);
+  border: 1px solid rgba(255, 61, 0, 0.8);
+  transform: translateY(-2px) scale(1.02);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .neon-border-orange {
-  border: 1px solid rgba(251, 146, 60, 0.3);
-  background: linear-gradient(135deg, rgba(251, 146, 60, 0.1), rgba(251, 146, 60, 0.05));
+  background: linear-gradient(135deg, 
+    rgba(255, 61, 0, 0.15), 
+    rgba(255, 107, 53, 0.1), 
+    rgba(255, 149, 0, 0.05));
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+}
+
+.neon-border-orange::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(45deg, #ff3d00, #ff6b35, #ff9500, #ffc107);
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: borderGlow 3s linear infinite;
 }
 
 .focus\:glow-orange:focus {
-  box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.4), 0 0 10px rgba(251, 146, 60, 0.6);
+  box-shadow: 
+    0 0 0 3px rgba(255, 61, 0, 0.5),
+    0 0 10px rgba(255, 107, 53, 0.8),
+    0 0 20px rgba(255, 149, 0, 0.6),
+    0 0 30px rgba(255, 193, 7, 0.4);
+  outline: none;
+  border: 2px solid rgba(255, 61, 0, 0.8);
 }
 
-/* Анимации */
+/* КРУТЫЕ СОВРЕМЕННЫЕ АНИМАЦИИ */
 .animate-pulse-orange {
-  animation: pulse-orange 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: modernPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-@keyframes pulse-orange {
+@keyframes modernPulse {
   0%, 100% {
-    background-color: rgba(251, 146, 60, 0.9);
+    background: linear-gradient(135deg, rgba(255, 61, 0, 0.9), rgba(255, 107, 53, 0.7));
+    box-shadow: 0 0 20px rgba(255, 61, 0, 0.6);
+    transform: scale(1);
   }
   50% {
-    background-color: rgba(251, 146, 60, 0.6);
+    background: linear-gradient(135deg, rgba(255, 107, 53, 1), rgba(255, 149, 0, 0.8));
+    box-shadow: 0 0 30px rgba(255, 107, 53, 0.8);
+    transform: scale(1.05);
   }
 }
 
-/* Стили для логотипа */
+@keyframes neonPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px rgba(255, 61, 0, 1)) 
+            drop-shadow(0 0 8px rgba(255, 107, 53, 0.9)) 
+            drop-shadow(0 0 16px rgba(255, 149, 0, 0.7));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(255, 61, 0, 1)) 
+            drop-shadow(0 0 16px rgba(255, 107, 53, 1)) 
+            drop-shadow(0 0 32px rgba(255, 149, 0, 0.9))
+            drop-shadow(0 0 48px rgba(255, 193, 7, 0.7));
+  }
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes borderGlow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* СТИЛИ ДЛЯ ЛОГОТИПА С КРУТЫМИ ЭФФЕКТАМИ */
 .logo-glow {
-  filter: drop-shadow(0 0 10px rgba(251, 146, 60, 0.8)) drop-shadow(0 0 20px rgba(251, 146, 60, 0.6));
+  filter: drop-shadow(0 0 8px rgba(255, 61, 0, 0.9)) 
+          drop-shadow(0 0 16px rgba(255, 107, 53, 0.7))
+          drop-shadow(0 0 24px rgba(255, 149, 0, 0.5));
+  animation: logoFloat 3s ease-in-out infinite;
 }
 
 .logo-container {
   position: relative;
   overflow: hidden;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 61, 0, 0.2), rgba(255, 107, 53, 0.1));
 }
 
 .logo-container::before {
@@ -74,12 +170,24 @@
   left: -50%;
   right: -50%;
   bottom: -50%;
-  background: linear-gradient(45deg, transparent, rgba(251, 146, 60, 0.1), transparent);
-  animation: rotate 4s linear infinite;
+  background: conic-gradient(from 0deg, transparent, rgba(255, 61, 0, 0.3), rgba(255, 107, 53, 0.2), rgba(255, 149, 0, 0.1), transparent);
+  animation: logoRotate 4s linear infinite;
   z-index: 0;
 }
 
-@keyframes rotate {
+@keyframes logoFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-3px) rotate(1deg);
+  }
+  66% {
+    transform: translateY(2px) rotate(-1deg);
+  }
+}
+
+@keyframes logoRotate {
   0% {
     transform: rotate(0deg);
   }
@@ -88,41 +196,124 @@
   }
 }
 
-/* Улучшенные градиенты */
+/* УЛЬТРА СОВРЕМЕННЫЕ ГРАДИЕНТЫ */
 .bg-gradient-orange {
-  background: linear-gradient(135deg, #fb923c, #f97316, #ea580c);
+  background: linear-gradient(135deg, #ff3d00, #ff6b35, #ff9500, #ffc107);
+  background-size: 400% 400%;
+  animation: gradientShift 6s ease infinite;
 }
 
 .bg-gradient-orange-dark {
-  background: linear-gradient(135deg, #ea580c, #dc2626, #b91c1c);
+  background: linear-gradient(135deg, #d84315, #e65100, #f57c00, #ff8f00);
+  background-size: 400% 400%;
+  animation: gradientShift 8s ease infinite;
 }
 
-/* Стили для модальных окон */
+/* СТИЛИ ДЛЯ МОДАЛЬНЫХ ОКОН С НЕОНОВЫМИ ЭФФЕКТАМИ */
 .modal-overlay {
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(15px) saturate(1.5);
 }
 
 .modal-content {
-  background: linear-gradient(135deg, rgba(17, 24, 39, 0.95), rgba(31, 41, 55, 0.95));
-  border: 1px solid rgba(251, 146, 60, 0.3);
-  box-shadow: 0 0 30px rgba(251, 146, 60, 0.4);
+  background: linear-gradient(135deg, 
+    rgba(17, 24, 39, 0.98), 
+    rgba(31, 41, 55, 0.95),
+    rgba(55, 65, 81, 0.9));
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  box-shadow: 
+    0 0 30px rgba(255, 61, 0, 0.4),
+    0 0 60px rgba(255, 107, 53, 0.2),
+    0 0 90px rgba(255, 149, 0, 0.1),
+    inset 0 0 30px rgba(255, 61, 0, 0.05);
+  position: relative;
 }
 
-/* Кастомная полоса прокрутки */
+.modal-content::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(45deg, #ff3d00, #ff6b35, #ff9500, #ffc107, #ff3d00);
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: borderGlow 4s linear infinite;
+}
+
+/* КАСТОМНАЯ ПОЛОСА ПРОКРУТКИ В НЕОНОВОМ СТИЛЕ */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(31, 41, 55, 0.3);
+  background: linear-gradient(180deg, rgba(31, 41, 55, 0.5), rgba(17, 24, 39, 0.8));
+  border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #fb923c, #f97316);
-  border-radius: 4px;
+  background: linear-gradient(180deg, #ff3d00, #ff6b35, #ff9500);
+  border-radius: 6px;
+  box-shadow: 
+    0 0 10px rgba(255, 61, 0, 0.6),
+    inset 0 0 5px rgba(255, 255, 255, 0.2);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #f97316, #ea580c);
+  background: linear-gradient(180deg, #ff6b35, #ff9500, #ffc107);
+  box-shadow: 
+    0 0 15px rgba(255, 107, 53, 0.8),
+    inset 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+/* ДОПОЛНИТЕЛЬНЫЕ КРУТЫЕ ЭФФЕКТЫ */
+.cyber-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.cyber-glow::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: scan 2s linear infinite;
+}
+
+@keyframes scan {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.glow-text-shadow {
+  text-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 15px currentColor,
+    0 0 20px rgba(255, 61, 0, 0.8),
+    0 0 35px rgba(255, 107, 53, 0.6),
+    0 0 40px rgba(255, 149, 0, 0.4);
+}
+
+.hologram-effect {
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  background-size: 200% 200%;
+  animation: hologram 3s linear infinite;
+}
+
+@keyframes hologram {
+  0% {
+    background-position: -200% -200%;
+  }
+  100% {
+    background-position: 200% 200%;
+  }
 }
