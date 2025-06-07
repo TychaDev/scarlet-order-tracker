@@ -3,11 +3,11 @@ import { useState } from "react";
 import { Home, Package, Truck, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { AdminSettings } from "./AdminSettings";
+import { OwnerSettings } from "./OwnerSettings";
 
 export const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [showAdminSettings, setShowAdminSettings] = useState(false);
+  const [showOwnerSettings, setShowOwnerSettings] = useState(false);
   const location = useLocation();
   const { t } = useLanguage();
 
@@ -19,7 +19,7 @@ export const Sidebar = () => {
 
   return (
     <>
-      <div className={`bg-gray-900 border-r border-orange-500/20 transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} shadow-2xl shadow-orange-500/10`}>
+      <div className={`bg-gray-900 border-r border-orange-500/20 transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'} shadow-corporate-lg`}>
         <div className="p-4 border-b border-orange-500/30">
           <div className="flex items-center justify-between">
             {!collapsed && (
@@ -28,10 +28,10 @@ export const Sidebar = () => {
                   <img 
                     src="https://imgur.com/wttBiky.png" 
                     alt="Апельсин"
-                    className="w-8 h-8 object-contain logo-glow"
+                    className="w-8 h-8 object-contain logo-shadow"
                   />
                 </div>
-                <span className="text-white font-bold text-xl text-glow-orange-intense">Апельсин</span>
+                <span className="text-white font-bold text-xl">Апельсин</span>
               </div>
             )}
             <button
@@ -55,8 +55,8 @@ export const Sidebar = () => {
                     to={item.path}
                     className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 ${
                       isActive 
-                        ? 'bg-gradient-to-r from-orange-600 to-orange-500 text-white shadow-lg shadow-orange-500/30 glow-orange' 
-                        : 'text-gray-400 hover:text-white hover:bg-gray-800/50 hover:shadow-orange-500/10'
+                        ? 'active-corporate' 
+                        : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
                     }`}
                   >
                     <Icon size={20} />
@@ -68,8 +68,8 @@ export const Sidebar = () => {
             
             <li className="pt-4 border-t border-orange-500/20">
               <button
-                onClick={() => setShowAdminSettings(true)}
-                className="flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white hover:bg-gray-800/50 hover:shadow-orange-500/10 w-full"
+                onClick={() => setShowOwnerSettings(true)}
+                className="flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white hover:bg-gray-800/50 w-full"
               >
                 <Settings size={20} />
                 {!collapsed && <span className="font-medium">{t('nav.settings')}</span>}
@@ -79,9 +79,9 @@ export const Sidebar = () => {
         </nav>
       </div>
 
-      <AdminSettings 
-        isOpen={showAdminSettings}
-        onClose={() => setShowAdminSettings(false)}
+      <OwnerSettings 
+        isOpen={showOwnerSettings}
+        onClose={() => setShowOwnerSettings(false)}
       />
     </>
   );
