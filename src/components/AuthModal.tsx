@@ -54,8 +54,8 @@ export const AuthModal = ({ isOpen, onClose, onAuthSuccess }: AuthModalProps) =>
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="modal-content-corporate max-w-md">
+    <Dialog open={isOpen} onOpenChange={() => {}}>
+      <DialogContent className="modal-content-corporate max-w-md" onPointerDownOutside={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-bold text-gradient-orange-intense">
             Вход в систему

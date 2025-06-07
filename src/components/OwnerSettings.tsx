@@ -32,10 +32,10 @@ export const OwnerSettings = ({ isOpen, onClose }: OwnerSettingsProps) => {
     }
   }, [isOpen]);
 
-  const handlePasswordCheck = () => {
+  const handlePasswordCheck = async () => {
     if (ownerPassword === "8174126811dda") {
       setStep('settings');
-      loadCurrentSettings();
+      await loadCurrentManagerData();
     } else {
       toast({
         title: "Неверный пароль",
@@ -45,57 +45,80 @@ export const OwnerSettings = ({ isOpen, onClose }: OwnerSettingsProps) => {
     }
   };
 
-  const loadCurrentSettings = async () => {
+  const loadCurrentManagerData = async () => {
     try {
-      const { data, error } = await supabase
-        .from('system_settings')
-        .select('manager_name, manager_email')
-        .single();
+      // Получаем текущего пользователя
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user) {
+        // Получаем профиль пользователя
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', user.id)
+          .single();
 
-      if (data && !error) {
+        if (profileError) {
+          console.error('Ошибка загрузки профиля:', profileError);
+        }
+
         setSettings({
-          managerName: data.manager_name || "",
-          managerEmail: data.manager_email || "",
+          managerName: profile?.full_name || "",
+          managerEmail: user.email || "",
           newManagerPassword: ""
         });
       }
     } catch (error) {
-      console.error('Ошибка загрузки настроек:', error);
+      console.error('Ошибка загрузки данных менеджера:', error);
+      toast({
+        title: "Ошибка",
+        description: "Не удалось загрузить данные менеджера",
+        variant: "destructive",
+      });
     }
   };
 
   const handleSaveSettings = async () => {
     setLoading(true);
     try {
-      const updateData: any = {
-        manager_name: settings.managerName,
-        manager_email: settings.managerEmail,
-        updated_at: new Date().toISOString()
-      };
-
-      // Если указан новый пароль для менеджера, обновляем его
-      if (settings.newManagerPassword) {
-        // Здесь можно добавить логику обновления пароля менеджера в auth.users
-        const { error: authError } = await supabase.auth.admin.updateUserById(
-          'manager-user-id', // ID пользователя менеджера
-          { password: settings.newManagerPassword }
-        );
-        
-        if (authError) {
-          console.error('Ошибка обновления пароля:', authError);
-        }
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error("Пользователь не авторизован");
       }
 
-      const { error } = await supabase
-        .from('system_settings')
-        .update(updateData)
-        .eq('admin_password_hash', '8174126811dda');
+      // Обновляем профиль пользователя
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({
+          full_name: settings.managerName,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id);
 
-      if (error) throw error;
+      if (profileError) throw profileError;
+
+      // Если указан новый пароль, обновляем его
+      if (settings.newManagerPassword) {
+        const { error: passwordError } = await supabase.auth.updateUser({
+          password: settings.newManagerPassword
+        });
+        
+        if (passwordError) throw passwordError;
+      }
+
+      // Обновляем email если он изменился
+      if (settings.managerEmail !== user.email) {
+        const { error: emailError } = await supabase.auth.updateUser({
+          email: settings.managerEmail
+        });
+        
+        if (emailError) throw emailError;
+      }
 
       toast({
         title: "Настройки сохранены",
-        description: "Настройки успешно обновлены",
+        description: "Настройки менеджера успешно обновлены",
       });
 
       onClose();
@@ -115,7 +138,7 @@ export const OwnerSettings = ({ isOpen, onClose }: OwnerSettingsProps) => {
       <DialogContent className="modal-content-corporate max-w-md">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-bold text-gradient-orange-intense">
-            {step === 'password' ? 'Доступ владельца' : 'Настройки системы'}
+            {step === 'password' ? 'Доступ владельца' : 'Настройки менеджера'}
           </DialogTitle>
         </DialogHeader>
 
