@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { TopBar } from "@/components/TopBar";
-import { Plus, Edit, Trash2, Search, Upload, FileUp } from "lucide-react";
+import { Edit, Trash2, Search, Upload, FileUp } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -57,22 +57,54 @@ const Products = () => {
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(text, "text/xml");
       
-      const items = xmlDoc.getElementsByTagName('item') || xmlDoc.getElementsByTagName('product');
+      // Парсим предложения из XML в формате вашего каталога
+      const offers = xmlDoc.getElementsByTagName('offer');
       const newProducts = [];
       
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i];
+      console.log('Найдено предложений в XML:', offers.length);
+      
+      for (let i = 0; i < offers.length; i++) {
+        const offer = offers[i];
+        
+        // Извлекаем данные из атрибутов и элементов
+        const sku = offer.getAttribute('sku') || '';
+        const group1 = offer.getAttribute('group1') || 'Без категории';
+        const group2 = offer.getAttribute('group2') || '';
+        
+        const nameElement = offer.getElementsByTagName('name')[0];
+        const ostatokElement = offer.getElementsByTagName('ostatok')[0];
+        const priceElement = offer.getElementsByTagName('price')[0];
+        
+        const name = nameElement?.textContent || 'Неизвестный товар';
+        const ostatokText = ostatokElement?.textContent || '0';
+        const priceText = priceElement?.textContent || '0';
+        
+        // Обработка остатка (может быть пустым или с запятой)
+        let stockQuantity = 0;
+        if (ostatokText && ostatokText.trim()) {
+          stockQuantity = Math.floor(parseFloat(ostatokText.replace(',', '.')) || 0);
+        }
+        
+        // Обработка цены (убираем пробелы)
+        const price = parseFloat(priceText.replace(/\s/g, '').replace(',', '.')) || 0;
+        
         const productData = {
-          name: item.getElementsByTagName('name')[0]?.textContent || 'Неизвестный товар',
-          category: item.getElementsByTagName('category')[0]?.textContent || 'Без категории',
-          price: parseFloat(item.getElementsByTagName('price')[0]?.textContent || '0'),
-          stock_quantity: parseInt(item.getElementsByTagName('stock')[0]?.textContent || '0'),
-          description: item.getElementsByTagName('description')[0]?.textContent || 'Описание отсутствует',
+          name: name,
+          category: group2 || group1,
+          price: price,
+          stock_quantity: stockQuantity,
+          description: `SKU: ${sku}${group1 ? ` | Группа: ${group1}` : ''}${group2 ? ` | Подгруппа: ${group2}` : ''}`,
           xml_data: {
-            original_id: item.getAttribute('id'),
-            raw_data: item.outerHTML
+            sku: sku,
+            group1: group1,
+            group2: group2,
+            original_ostatok: ostatokText,
+            original_price: priceText,
+            raw_data: offer.outerHTML
           }
         };
+        
+        console.log('Обработан товар:', productData);
         
         // Сохраняем товар в базу данных
         const { data, error } = await supabase
@@ -83,6 +115,8 @@ const Products = () => {
 
         if (!error && data) {
           newProducts.push(data);
+        } else {
+          console.error('Ошибка при сохранении товара:', error);
         }
       }
       
@@ -102,6 +136,10 @@ const Products = () => {
       });
     } finally {
       setIsLoading(false);
+      // Сбрасываем значение input для возможности повторной загрузки того же файла
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
@@ -148,7 +186,7 @@ const Products = () => {
         
         <main className="flex-1 p-6">
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-4xl font-bold text-white bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent text-glow-orange-intense">
+            <h1 className="text-4xl font-bold text-white bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
               {t('products.title')}
             </h1>
             
@@ -164,7 +202,7 @@ const Products = () => {
               <button 
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isLoading}
-                className="flex items-center gap-2 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white px-6 py-3 rounded-lg transition-all duration-200 shadow-lg shadow-orange-500/30 hover-glow-orange disabled:opacity-50"
+                className="flex items-center gap-2 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white px-6 py-3 rounded-lg transition-all duration-200 shadow-lg shadow-orange-500/30 disabled:opacity-50"
               >
                 {isLoading ? (
                   <>
@@ -178,11 +216,6 @@ const Products = () => {
                   </>
                 )}
               </button>
-              
-              <button className="flex items-center gap-2 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white px-6 py-3 rounded-lg transition-all duration-200 shadow-lg shadow-orange-500/30 hover-glow-orange">
-                <Plus size={20} />
-                {t('products.addProduct')}
-              </button>
             </div>
           </div>
 
@@ -194,19 +227,19 @@ const Products = () => {
                 placeholder={t('products.search')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="bg-gray-800/60 backdrop-blur text-white pl-10 pr-4 py-3 rounded-lg border border-orange-500/30 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30 w-full transition-all duration-200 neon-border-orange focus:glow-orange"
+                className="bg-gray-800/60 backdrop-blur text-white pl-10 pr-4 py-3 rounded-lg border border-orange-500/30 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/30 w-full transition-all duration-200"
               />
             </div>
           </div>
 
           {products.length === 0 ? (
-            <div className="bg-gray-800/60 backdrop-blur border border-orange-500/20 rounded-xl p-12 text-center neon-border-orange">
+            <div className="bg-gray-800/60 backdrop-blur border border-orange-500/20 rounded-xl p-12 text-center">
               <FileUp size={64} className="mx-auto mb-4 text-orange-400 opacity-50" />
               <h2 className="text-xl font-semibold text-white mb-2">База товаров пуста</h2>
               <p className="text-gray-400 mb-6">Загрузите XML файл с товарами для начала работы</p>
               <button 
                 onClick={() => fileInputRef.current?.click()}
-                className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white px-6 py-3 rounded-lg transition-all duration-200 shadow-lg shadow-orange-500/30 hover-glow-orange"
+                className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white px-6 py-3 rounded-lg transition-all duration-200 shadow-lg shadow-orange-500/30"
               >
                 <Upload size={20} className="inline mr-2" />
                 Загрузить XML файл
@@ -218,10 +251,10 @@ const Products = () => {
                 const stockStatus = getStockStatus(product.stock_quantity || 0);
                 
                 return (
-                  <div key={product.id} className="bg-gray-800/60 backdrop-blur rounded-xl p-6 border border-orange-500/20 hover:border-orange-500/50 transition-all duration-300 hover-glow-orange neon-border-orange">
+                  <div key={product.id} className="bg-gray-800/60 backdrop-blur rounded-xl p-6 border border-orange-500/20 hover:border-orange-500/50 transition-all duration-300">
                     <div className="flex items-start justify-between mb-4">
                       <div>
-                        <h3 className="text-lg font-semibold text-white mb-1 text-glow-orange-intense">{product.name}</h3>
+                        <h3 className="text-lg font-semibold text-white mb-1">{product.name}</h3>
                         <span className="text-sm text-gray-400">{product.category}</span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -240,7 +273,7 @@ const Products = () => {
                     <p className="text-gray-300 text-sm mb-4 line-clamp-2">{product.description}</p>
                     
                     <div className="flex items-center justify-between mb-4">
-                      <div className="text-2xl font-bold text-orange-400 text-glow-orange-intense">
+                      <div className="text-2xl font-bold text-orange-400">
                         ₽{product.price?.toLocaleString()}
                       </div>
                       <div className={`px-3 py-1 rounded-full ${stockStatus.bg} border border-orange-500/20`}>
