@@ -1,7 +1,7 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { TopBar } from "@/components/TopBar";
+import { FtpMonitor } from "@/components/FtpMonitor";
 import { Edit, Trash2, Search, Upload, FileUp } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -217,6 +217,11 @@ const Products = () => {
                 )}
               </button>
             </div>
+          </div>
+
+          {/* Добавляем FTP мониторинг */}
+          <div className="mb-6">
+            <FtpMonitor />
           </div>
 
           <div className="mb-6">
