@@ -9,6 +9,54 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      order_history: {
+        Row: {
+          archived_reason: string | null
+          completed_at: string | null
+          created_at: string
+          customer_address: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          id: string
+          items: Json | null
+          order_number: string
+          original_order_id: string
+          payment_method: string | null
+          status: string | null
+          total_amount: number | null
+        }
+        Insert: {
+          archived_reason?: string | null
+          completed_at?: string | null
+          created_at: string
+          customer_address?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          id?: string
+          items?: Json | null
+          order_number: string
+          original_order_id: string
+          payment_method?: string | null
+          status?: string | null
+          total_amount?: number | null
+        }
+        Update: {
+          archived_reason?: string | null
+          completed_at?: string | null
+          created_at?: string
+          customer_address?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          id?: string
+          items?: Json | null
+          order_number?: string
+          original_order_id?: string
+          payment_method?: string | null
+          status?: string | null
+          total_amount?: number | null
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           created_at: string | null
@@ -18,9 +66,11 @@ export type Database = {
           id: string
           items: Json | null
           order_number: string
+          payment_method: string | null
           status: string | null
           total_amount: number | null
           updated_at: string | null
+          updated_status_at: string | null
         }
         Insert: {
           created_at?: string | null
@@ -30,9 +80,11 @@ export type Database = {
           id?: string
           items?: Json | null
           order_number: string
+          payment_method?: string | null
           status?: string | null
           total_amount?: number | null
           updated_at?: string | null
+          updated_status_at?: string | null
         }
         Update: {
           created_at?: string | null
@@ -42,9 +94,11 @@ export type Database = {
           id?: string
           items?: Json | null
           order_number?: string
+          payment_method?: string | null
           status?: string | null
           total_amount?: number | null
           updated_at?: string | null
+          updated_status_at?: string | null
         }
         Relationships: []
       }
@@ -52,8 +106,10 @@ export type Database = {
         Row: {
           category: string | null
           created_at: string | null
+          custom_description: string | null
           description: string | null
           id: string
+          image_url: string | null
           name: string
           price: number | null
           stock_quantity: number | null
@@ -63,8 +119,10 @@ export type Database = {
         Insert: {
           category?: string | null
           created_at?: string | null
+          custom_description?: string | null
           description?: string | null
           id?: string
+          image_url?: string | null
           name: string
           price?: number | null
           stock_quantity?: number | null
@@ -74,8 +132,10 @@ export type Database = {
         Update: {
           category?: string | null
           created_at?: string | null
+          custom_description?: string | null
           description?: string | null
           id?: string
+          image_url?: string | null
           name?: string
           price?: number | null
           stock_quantity?: number | null
