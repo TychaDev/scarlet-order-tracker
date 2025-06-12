@@ -243,7 +243,7 @@ export const XmlUploader = () => {
             <>
               <Upload size={16} className="mr-2" />
               Загрузить XML файл
-            </Button>
+            </>
           )}
         </Button>
       </div>
