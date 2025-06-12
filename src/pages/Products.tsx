@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { TopBar } from "@/components/TopBar";
@@ -285,7 +284,7 @@ const Products = () => {
                           </TableCell>
                           <TableCell className="text-gray-300">{product.category || 'Без категории'}</TableCell>
                           <TableCell className="text-orange-400 font-semibold">
-                            ₽{product.price?.toLocaleString() || '0'}
+                            {product.price?.toLocaleString()} ₸
                           </TableCell>
                           <TableCell className="text-white">{product.stock_quantity || 0} шт.</TableCell>
                           <TableCell>

@@ -215,7 +215,7 @@ export const ProductEditor = ({ product, isOpen, onClose, onSave }: ProductEdito
               </div>
               <div>
                 <span className="text-gray-400">Цена:</span>
-                <span className="text-white ml-2">₽{product.price?.toLocaleString()}</span>
+                <span className="text-white ml-2">{product.price?.toLocaleString()} ₸</span>
               </div>
               <div>
                 <span className="text-gray-400">Остаток:</span>

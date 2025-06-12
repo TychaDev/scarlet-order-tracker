@@ -3,11 +3,13 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import { Monitor, RefreshCw, Server, Database, AlertTriangle } from 'lucide-react';
+import { Monitor, RefreshCw, Server, Database, AlertTriangle, Settings } from 'lucide-react';
 import { XmlUploader } from './XmlUploader';
+import { FtpSetupInstructions } from './FtpSetupInstructions';
 
 export const FtpMonitor = () => {
   const [isMonitoring, setIsMonitoring] = useState(false);
+  const [isSetupOpen, setIsSetupOpen] = useState(false);
   const { toast } = useToast();
 
   const checkForNewFiles = async () => {
@@ -68,23 +70,34 @@ export const FtpMonitor = () => {
               </p>
             </div>
             
-            <Button
-              onClick={checkForNewFiles}
-              disabled={isMonitoring}
-              className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white w-full"
-            >
-              {isMonitoring ? (
-                <>
-                  <RefreshCw size={16} className="mr-2 animate-spin" />
-                  Проверка...
-                </>
-              ) : (
-                <>
-                  <Monitor size={16} className="mr-2" />
-                  Информация о мониторинге
-                </>
-              )}
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={checkForNewFiles}
+                disabled={isMonitoring}
+                className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white flex-1"
+              >
+                {isMonitoring ? (
+                  <>
+                    <RefreshCw size={16} className="mr-2 animate-spin" />
+                    Проверка...
+                  </>
+                ) : (
+                  <>
+                    <Monitor size={16} className="mr-2" />
+                    Информация о мониторинге
+                  </>
+                )}
+              </Button>
+              
+              <Button
+                onClick={() => setIsSetupOpen(true)}
+                variant="outline"
+                className="border-orange-500/30 text-orange-400 hover:bg-orange-500/10"
+              >
+                <Settings size={16} className="mr-2" />
+                Настройка FTP
+              </Button>
+            </div>
           </div>
 
           <div>
@@ -100,9 +113,10 @@ export const FtpMonitor = () => {
                 </p>
                 <ul className="space-y-1 text-gray-400">
                   <li>• Хост: IP вашего сервера</li>
-                  <li>• Порт: 21</li>
-                  <li>• Папка: /home/ftpmanager/xml_upload</li>
+                  <li>• Порт: 21 (стандартный FTP)</li>
+                  <li>• Папка: /xml_upload</li>
                   <li>• Формат файлов: XML</li>
+                  <li>• Валюта: Тенге (₸)</li>
                 </ul>
               </div>
               
@@ -114,6 +128,12 @@ export const FtpMonitor = () => {
           </div>
         </div>
       </div>
+      
+      {/* Модальное окно с инструкциями */}
+      <FtpSetupInstructions 
+        isOpen={isSetupOpen}
+        onClose={() => setIsSetupOpen(false)}
+      />
     </div>
   );
 };
