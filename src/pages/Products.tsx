@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { TopBar } from "@/components/TopBar";
-import { FtpMonitor } from "@/components/FtpMonitor";
+import { XmlFileMonitor } from "@/components/XmlFileMonitor";
 import { ProductEditor } from "@/components/ProductEditor";
 import { ProductSearch, SearchFilters } from "@/components/ProductSearch";
 import { OrderHistory } from "@/components/OrderHistory";
 import { Package, Edit, History, Image } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { supabase } from "@/integrations/supabase/client";
+import { apiService } from "@/services/api";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
@@ -47,21 +47,17 @@ const Products = () => {
   const loadProducts = async () => {
     try {
       setIsLoading(true);
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .order('name');
-
-      if (error) throw error;
+      console.log('Загружаем товары из API...');
+      const data = await apiService.getProducts();
       
-      const productsData = data || [];
-      setProducts(productsData);
-      setFilteredProducts(productsData);
+      console.log('Получено товаров:', data.length);
+      setProducts(data);
+      setFilteredProducts(data);
     } catch (error: any) {
       console.error('Ошибка загрузки товаров:', error);
       toast({
         title: "Ошибка",
-        description: "Не удалось загрузить товары",
+        description: "Не удалось загрузить товары: " + error.message,
         variant: "destructive",
       });
     } finally {
@@ -170,8 +166,8 @@ const Products = () => {
           </div>
 
           <div className="space-y-6">
-            {/* FTP Мониторинг */}
-            <FtpMonitor />
+            {/* XML Мониторинг */}
+            <XmlFileMonitor />
             
             {/* Поиск товаров */}
             <ProductSearch 
