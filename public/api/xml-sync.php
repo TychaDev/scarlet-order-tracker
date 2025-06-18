@@ -1,12 +1,22 @@
 
 <?php
-header('Content-Type: application/json');
+// Настройка CORS и обработка методов
+header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
+// Обработка preflight OPTIONS запроса
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
     exit(0);
+}
+
+// Проверяем метод запроса
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['error' => 'Only POST method allowed']);
+    exit;
 }
 
 require_once 'config.php';
@@ -28,9 +38,9 @@ function processXmlFile($filepath, $pdo) {
         throw new Exception("Ошибка парсинга XML файла: " . basename($filepath));
     }
     
+    // Ищем элементы товаров в XML
     $offers = $xml->xpath('//offer');
     if (empty($offers)) {
-        // Попробуем найти другие варианты
         $offers = $xml->xpath('//product');
         if (empty($offers)) {
             $offers = $xml->xpath('//item');
@@ -113,14 +123,13 @@ function getFileHash($filepath) {
 }
 
 try {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        http_response_code(405);
-        echo json_encode(['error' => 'Method not allowed']);
-        exit;
-    }
-    
-    $pdo = new PDO("mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME, DB_USER, DB_PASS);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Подключение к базе данных
+    $dsn = "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+    $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
+    ]);
     
     logMessage("Начинаем синхронизацию XML файлов");
     
